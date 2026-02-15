@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hadi | AI & Deep Learning Developer</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  background:#020617;
+  color:#e5e7eb;
+  font-family:"Times New Roman", Times, serif;
+  line-height:1.8;
+  overflow-x: hidden;
+}
+
+#canvas3d {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+#webcam {
+  display: none;
+}
+
+nav{
+  background:rgba(1, 4, 13, 0.9);
+  backdrop-filter: blur(10px);
+  padding:12px 20px;
+  display:flex;
+  gap:24px;
+  align-items:center;
+  position:fixed;
+  top:0;
+  width:100%;
+  z-index:100;
+  border-bottom:1px solid #1e293b;
+}
+
+nav a{
+  text-decoration:none;
+  color:#e5e7eb;
+  font-size:16px;
+  letter-spacing:1px;
+  position:relative;
+  transition:color .3s ease, transform .3s ease;
+}
+
+nav a:hover{
+  color:#f97316;
+  transform:translateY(-2px);
+}
+
+nav a::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-6px;
+  width:0;
+  height:2px;
+  background:#f97316;
+  transition:width .3s ease;
+}
+
+nav a:hover::after{
+  width:100%;
+}
+
+section{
+  padding:120px 40px 80px;
+  max-width:1100px;
+  margin:auto;
+  position: relative;
+  z-index: 10;
+}
+
+h1{
+  font-size:28px;
+  margin-bottom:6px;
+}
+
+.subtitle{
+  font-size:30px;
+  color:#60a5fa;
+}
+
+#about p{
+  margin-top:18px;
+  font-size:18px;
+}
+
+.projects{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:22px;
+  margin-top:30px;
+}
+
+.project-card{
+  background:rgba(2, 6, 23, 0.8);
+  backdrop-filter: blur(5px);
+  border:1px solid #f97316;
+  padding:22px;
+  border-radius:14px;
+  cursor:pointer;
+  display:block;
+  text-decoration:none;
+  color:#e5e7eb;
+  transition:
+    transform .35s ease,
+    box-shadow .35s ease,
+    border-color .35s ease;
+}
+
+.project-card:hover{
+  transform:translateY(-6px) scale(1.02);
+  box-shadow:0 0 18px rgba(249,115,22,.35);
+  border-color:#fb923c;
+}
+
+.contact-link{
+  display:block;
+  margin:12px 0;
+  font-size:18px;
+  color:#60a5fa;
+  text-decoration:none;
+  transition:color .3s ease, transform .3s ease;
+}
+
+.contact-link:hover{
+  color:#f97316;
+  transform:translateX(6px);
+}
+
+.fa{
+  direction: rtl;
+  text-align: right;
+}
+
+.animate{
+  opacity:0;
+  transform:translateY(20px);
+  animation:fadeUp .8s forwards;
+}
+
+@keyframes fadeUp{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@media(max-width:768px){
+  nav{
+    padding:10px 12px;
+    gap:18px;
+    justify-content:flex-start;
+    flex-wrap: wrap;
+  }
+  
+  nav a {
+    font-size: 14px;
+  }
+
+  section{
+    padding:110px 20px 70px;
+  }
+
+  h1{
+    font-size:24px;
+  }
+
+  .subtitle{
+    font-size:24px;
+  }
+  
+  #about p, .fa {
+    font-size: 15px;
+  }
+  
+  .projects {
+    grid-template-columns: 1fr;
+  }
+  
+  .project-card {
+    font-size: 14px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="canvas3d"></canvas>
+<video id="webcam" autoplay playsinline></video>
+
+<nav>
+  <a href="#home">HOME</a>
+  <a href="#about">ABOUT</a>
+  <a href="#projects">PROJECTS</a>
+  <a href="#contact">CONTACT</a>
+</nav>
+
+<section id="home">
+  <h1 class="animate" style="animation-delay:.1s;">Hadi Kanani</h1>
+  <div class="subtitle animate" style="animation-delay:.3s;">
+    AI & Deep Learning Developer
+  </div>
+</section>
+
+<section id="about">
+  <h2 class="animate">About Me</h2>
+
+  <p class="animate">
+    I am an AI and Deep Learning developer focused on designing and building intelligent systems
+    that solve real-world problems using data-driven approaches.
+  </p>
+
+  <p class="animate">
+    My experience includes developing machine learning models, neural networks, automation tools,
+    and scalable web applications with clean and optimized architectures.
+  </p>
+
+  <p class="animate">
+    I work on projects related to prediction systems, data analysis, AI-powered dashboards,
+    and technical SEO for modern websites.
+  </p>
+
+  <p class="animate">
+    I am constantly learning and improving to deliver accurate, efficient, and practical solutions
+    for businesses and clients.
+  </p>
+
+  <p class="animate fa">
+    من توسعه‌دهنده هوش مصنوعی و یادگیری عمیق هستم و تمرکزم روی طراحی و پیاده‌سازی سیستم‌های هوشمند
+    برای حل مسائل واقعی با رویکردهای داده‌محور است.
+  </p>
+
+  <p class="animate fa">
+    تجربه‌ی من شامل ساخت مدل‌های یادگیری ماشین، شبکه‌های عصبی، ابزارهای اتوماسیون
+    و وب‌اپلیکیشن‌های مقیاس‌پذیر با معماری تمیز و بهینه می‌شود.
+  </p>
+
+  <p class="animate fa">
+    روی پروژه‌هایی مانند سیستم‌های پیش‌بینی، تحلیل داده، داشبوردهای هوشمند
+    و سئوی تکنیکال برای وب‌سایت‌های مدرن کار می‌کنم.
+  </p>
+
+  <p class="animate fa">
+    همیشه در حال یادگیری و بهبود هستم تا راه‌حل‌هایی دقیق، کاربردی و قابل اعتماد
+    برای کسب‌وکارها و مشتریان ارائه دهم.
+  </p>
+</section>
+
+<section id="skills">
+  <h2 class="animate">Skills</h2>
+  <p class="animate">
+    • Artificial Intelligence (AI)<br>
+    • Deep Learning & Neural Networks<br>
+    • Machine Learning<br>
+    • Python<br>
+    • Web Development<br>
+    • Data Analysis<br>
+    • Model Training & Optimization<br>
+    • AI Automation<br>
+    • Technical SEO
+  </p>
+</section>
+
+<section id="projects">
+  <h2>Projects</h2>
+  <div class="projects">
+    <a class="project-card" href="https://ponisha.ir/profile/Kananih93?username=Kananih93&portfolio-id=1283001&portfolio-username=Kananih93" target="_blank">
+      سیستم حضور و غیاب با QR Code + داشبورد مدیریت (SQLAlchemy)
+    </a>
+    <a class="project-card" href="https://ponisha.ir/profile/Kananih93?username=Kananih93&portfolio-id=1282062&portfolio-username=Kananih93" target="_blank">
+      سیستم مدیریت انبار و محصولات با QR Code (قابل ارتقا)
+    </a>
+    <a class="project-card" href="https://ponisha.ir/profile/Kananih93?username=Kananih93&portfolio-id=1280889&portfolio-username=Kananih93" target="_blank">
+      منوی رستوران با QR Code – Restaurant QR Menu
+    </a>
+    <a class="project-card" href="https://ponisha.ir/profile/Kananih93?username=Kananih93&portfolio-id=1275839&portfolio-username=Kananih93" target="_blank">
+      تشخیص ناهنجاری در تصاویر صنعتی (Deep Learning – FastAPI)
+    </a>
+  </div>
+</section>
+
+<section id="contact">
+  <h2>Contact</h2>
+  <div class="contact">
+    <a class="contact-link" href="/cdn-cgi/l/email-protection#c6ada7a8a7a7a8afaea7a2aff7fffff586a1aba7afaae8a5a9ab">Email: <span class="__cf_email__" data-cfemail="c0aba1aea1a1aea9a8a1a4a9f1f9f9f380a7ada1a9aceea3afad">[email&#160;protected]</span></a>
+    <a class="contact-link" href="https://www.instagram.com/hadi93.ai" target="_blank">Instagram</a>
+    <a class="contact-link" href="https://github.com/hadi93kg" target="_blank">GitHub</a>
+    <a class="contact-link" href="https://ponisha.ir/profile/Kananih93" target="_blank">Ponisha</a>
+    <a class="contact-link" href="https://www.karlancer.com/profile/719563" target="_blank">Karlancer</a>
+    <a class="contact-link" href="https://jobvision.ir/my-cv" target="_blank">Jobvision</a>
+  </div>
+</section>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+// THREE.JS
+const canvas3d = document.getElementById('canvas3d');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+const renderer = new THREE.WebGLRenderer({ canvas: canvas3d, alpha: true, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x000000, 0);
+camera.position.z = 12;
+
+const galaxyGroup = new THREE.Group();
+
+// Colors for galaxy arms
+const colors = [
+  new THREE.Color(0x00bfff),
+  new THREE.Color(0x00ffff),
+  new THREE.Color(0x20b2aa),
+  new THREE.Color(0x40e0d0),
+  new THREE.Color(0x87ceeb),
+  new THREE.Color(0xafffff),
+  new THREE.Color(0xe0ffff),
+];
+
+const getColor = (d) => {
+  if (d < 3) return colors[6];
+  if (d < 5) return colors[5];
+  if (d < 8) return colors[0];
+  if (d < 11) return colors[1];
+  return colors[2];
+};
+
+// Galaxy - with gradient brightness toward center
+const arms = 5;
+const count = isMobile ? 18000 : 30000;
+
+const geo = new THREE.BufferGeometry();
+const pos = new Float32Array(count * 3);
+const col = new Float32Array(count * 3);
+
+let validParticles = 0;
+
+for (let i = 0; i < count; i++) {
+  const arm = i % arms;
+  const armAng = (arm / arms) * Math.PI * 2;
+  
+  const dist = Math.pow(Math.random(), 0.9) * 12;
+  const spin = dist * 0.5;
+  const ang = armAng + spin;
+  
+  const rx = (Math.random() - 0.5) * (0.8 + dist * 0.15);
+  const ry = (Math.random() - 0.5) * (0.2 + dist * 0.08);
+  const rz = (Math.random() - 0.5) * (0.8 + dist * 0.15);
+  
+  const x = Math.cos(ang) * dist + rx;
+  const y = ry;
+  const z = Math.sin(ang) * dist + rz;
+  
+  // Keep center hollow
+  const distFromCenter = Math.sqrt(x * x + y * y + z * z);
+  if (distFromCenter < 0.4) continue;
+  
+  pos[validParticles * 3] = x;
+  pos[validParticles * 3 + 1] = y;
+  pos[validParticles * 3 + 2] = z;
+  
+  const c = getColor(dist);
+  const b = 0.9 + Math.random() * 0.2;
+  col[validParticles * 3] = c.r * b;
+  col[validParticles * 3 + 1] = c.g * b;
+  col[validParticles * 3 + 2] = c.b * b;
+  
+  validParticles++;
+}
+
+// Trim arrays
+const finalPos = new Float32Array(validParticles * 3);
+const finalCol = new Float32Array(validParticles * 3);
+for (let i = 0; i < validParticles * 3; i++) {
+  finalPos[i] = pos[i];
+  finalCol[i] = col[i];
+}
+
+geo.setAttribute('position', new THREE.BufferAttribute(finalPos, 3));
+geo.setAttribute('color', new THREE.BufferAttribute(finalCol, 3));
+
+// White particles with gradient brightness - brighter toward center
+const gradientCount = isMobile ? 8000 : 15000;
+const gradientPos = new Float32Array(gradientCount * 3);
+const gradientCol = new Float32Array(gradientCount * 3);
+
+let validGradient = 0;
+
+for (let i = 0; i < gradientCount; i++) {
+  const angle = Math.random() * Math.PI * 2;
+  
+  // توزیع نقاط از 0.4 تا 6 واحد از مرکز
+  const distance = 0.4 + Math.pow(Math.random(), 1.2) * 5.6;
+  const height = (Math.random() - 0.5) * (0.1 + distance * 0.05);
+  
+  const x = Math.cos(angle) * distance;
+  const y = height;
+  const z = Math.sin(angle) * distance;
+  
+  gradientPos[validGradient * 3] = x;
+  gradientPos[validGradient * 3 + 1] = y;
+  gradientPos[validGradient * 3 + 2] = z;
+  
+  // محاسبه روشنایی بر اساس فاصله از مرکز
+  // هرچه نزدیکتر به مرکز، روشن‌تر (سفید‌تر)
+  const distFromCenter = Math.sqrt(x * x + y * y + z * z);
+  
+  // فرمول گرادیانت: نزدیک به مرکز = 1.0 (سفید کامل)، دور از مرکز = 0.3 (کم‌نور)
+  const brightness = Math.max(0.3, 1.0 - ((distFromCenter - 0.4) / 5.6) * 0.7);
+  
+  // اضافه کردن کمی تصادفی برای طبیعی‌تر بودن
+  const randomness = 0.9 + Math.random() * 0.1;
+  const finalBrightness = brightness * randomness;
+  
+  gradientCol[validGradient * 3] = finalBrightness;
+  gradientCol[validGradient * 3 + 1] = finalBrightness;
+  gradientCol[validGradient * 3 + 2] = finalBrightness;
+  
+  validGradient++;
+}
+
+// Trim gradient arrays
+const finalGradientPos = new Float32Array(validGradient * 3);
+const finalGradientCol = new Float32Array(validGradient * 3);
+for (let i = 0; i < validGradient * 3; i++) {
+  finalGradientPos[i] = gradientPos[i];
+  finalGradientCol[i] = gradientCol[i];
+}
+
+const gradientGeo = new THREE.BufferGeometry();
+gradientGeo.setAttribute('position', new THREE.BufferAttribute(finalGradientPos, 3));
+gradientGeo.setAttribute('color', new THREE.BufferAttribute(finalGradientCol, 3));
+
+const gradientMat = new THREE.PointsMaterial({
+  size: 0.05,
+  vertexColors: true,
+  transparent: true,
+  opacity: 0.9,
+  blending: THREE.AdditiveBlending
+});
+
+const gradientPts = new THREE.Points(gradientGeo, gradientMat);
+galaxyGroup.add(gradientPts);
+
+const mat = new THREE.PointsMaterial({
+  size: 0.04,
+  vertexColors: true,
+  transparent: true,
+  opacity: 0.9,
+  blending: THREE.AdditiveBlending
+});
+
+const pts = new THREE.Points(geo, mat);
+galaxyGroup.add(pts);
+
+scene.add(galaxyGroup);
+
+// HAND
+let tRotY = 0, tRotX = 0, tScale = 1;
+
+const video = document.getElementById('webcam');
+const hands = new Hands({ locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}` });
+hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+
+hands.onResults((r) => {
+  if (r.multiHandLandmarks && r.multiHandLandmarks.length > 0) {
+    const lm = r.multiHandLandmarks[0];
+    const p = lm[0];
+    tRotY = (p.x - 0.5) * Math.PI * 2;
+    tRotX = (p.y - 0.5) * Math.PI;
+    const t = lm[4], pi = lm[20];
+    const o = Math.sqrt(Math.pow(t.x - pi.x, 2) + Math.pow(t.y - pi.y, 2));
+    tScale = o > 0.2 ? 1.5 : (o < 0.08 ? 0.7 : 1.0);
+  }
+});
+
+new Camera(video, { onFrame: async () => { await hands.send({ image: video }); }, width: 640, height: 480 }).start();
+
+// ANIM
+let t = 0;
+function anim() {
+  requestAnimationFrame(anim);
+  t += 0.005;
+  galaxyGroup.rotation.y += (tRotY - galaxyGroup.rotation.y) * 0.05;
+  galaxyGroup.rotation.x += (tRotX - galaxyGroup.rotation.x) * 0.05;
+  galaxyGroup.scale.x += (tScale - galaxyGroup.scale.x) * 0.1;
+  galaxyGroup.scale.y += (tScale - galaxyGroup.scale.y) * 0.1;
+  galaxyGroup.scale.z += (tScale - galaxyGroup.scale.z) * 0.1;
+  galaxyGroup.rotation.z += 0.001;
+  
+  renderer.render(scene, camera);
+}
+anim();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+
+</body>
+</html>
